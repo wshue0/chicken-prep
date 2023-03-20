@@ -1,7 +1,265 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-2 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>  
+    div.padded {  
+      padding-top: 0px;  
+      padding-right: 100px;  
+      padding-bottom: 0.25in;  
+      padding-left: 100px;  
+    }  
+  </style> 
+<title>Your Name  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Assignment 3-2: Additional Features to PathTracer</h1>
+    <h2 align="middle">William Shue & Tiger Ma</h2>
+    <h2 align="middle">https://wshue0.github.io/chicken-prep/proj3-2/index.html</h2>
+
+    <div class="padded">
+        <h3 align="middle">Overview</h3>
+        <p>In this project, we were able to implement the proper rendering of mirror and glass materials in part 1, as well as depth of field effects in part 4. 
+            Part 1 was not difficult to implement, but was an interesting exercise in thinking about how the max bounce limit effects the image produced.
+            In real life, many of the intricate visual patterns associated with glass and mirrors are caused by refraction and reflection, which we mathematically model
+            by using snell's law and fresnel equations in the project. The series of pictures with increasing max ray depth showcased just what was required to create reflections 
+            of the environment and even reflections of refractive materials. In part 4, we simply had to implement the ray-gathering model of a thin-lens camera,
+            we accomplished this by initializating the vectors and rays according to the diagram, which was very helpful. It was a little tricky getting the directions and signs 
+            right at first, but the end result was pretty cool since we could see how a scene gets progressively blurrier based on the focal distance and aperture setting. 
+        </p>
+
+        
+
+        <h3 align="middle">Part 1. Mirror and Glass Materials</h3>
+
+        <p><b>
+            Show a sequence of six images of scene `CBspheres.dae` rendered with `max_ray_depth` set to 0, 1, 2, 3, 4, 5, and 100. The other settings should be at least 64 samples per pixel and 4 samples per light. Make sure to include all screenshots.
+        </b></p>
+
+        <div align="middle">
+          <table style="width:100%">
+            <!-- Header -->
+            <tr align="center">
+              <td>
+                <img src="images/10.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 0</figcaption>
+              </td>
+              <td>
+                <img src="images/11.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 1</figcaption>
+              </td>
+              <td>
+                <img src="images/12.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 2</figcaption>
+              </td>
+            </tr>
+            <br>
+            <tr align="center">
+              <td>
+                <img src="images/13.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 3</figcaption>
+              </td>
+              <td>
+                <img src="images/14.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 4</figcaption>
+              </td>
+              <td>
+                <img src="images/15.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 5 </figcaption>
+              </td>
+              <td>
+                <img src="images/16.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 100 </figcaption>
+              </td>
+            </tr>
+            <br>
+          </table>
+        </div>
+
+
+
+
+        <br>
+        <p><b>
+            Point out the new multibounce effects that appear in each image. 
+        </b></p>
+        <div align="middle">
+          <table style="width:100%">
+            <!-- Header -->
+            <tr align="center">
+              <td>
+                <img src="images/10.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 0: No effects</figcaption>
+              </td>
+              <td>
+                <img src="images/11.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 1: No effects</figcaption>
+              </td>
+              <td>
+                <img src="images/12.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 2: Reflection of room + a dark glass ball visible in the mirror ball</figcaption>
+              </td>
+            </tr>
+            <br>
+            <tr align="center">
+              <td>
+                <img src="images/13.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 3: Reflection of room + dark glass ball visible in mirro ball, glass ball refracts like properly</figcaption>
+              </td>
+              <td>
+                <img src="images/14.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 4: Reflection of room + a proper glass ball visible in mirror ball, glass ball refracts properly, there is also a small focus of light on the side wall</figcaption>
+              </td>
+              <td>
+                <img src="images/15.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 5: Basically same as 4</figcaption>
+              </td>
+              <td>
+                <img src="images/16.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 100: Basically same as 4 & 5, slightly brighter, no new noticeable effects</figcaption>
+              </td>
+            </tr>
+            <br>
+          </table>
+        </div>
+        <br>
+        <p><b>
+            Explain how these bounce numbers relate to the particular effects that appear. Make sure to include all screenshots.
+        </b></p>
+        <div align="middle">
+          <table style="width:100%">
+            <!-- Header -->
+            <tr align="center">
+              <td>
+                <img src="images/10.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 0: No effects, zero-bounce only so light source is the only visible thing</figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/11.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 1: No effects, direct lighting only so the balls are still black</figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/12.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 2: We can seen the reflection of the glass ball in the mirror ball because light is able to bounce off the glass ball to the mirror ball then to the camera</figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/13.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 3: In addition, we can now see the light get refracted through the glass ball, since a ray can bounce off the surrounding, enter the glass ball, and then exit the ball to the camera</figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/14.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 4: Now we can see the glass ball's translucency show up in the reflection on the mirror 
+                    ball because the additional bounce allows what the camera perceived in the previous part to bounce off the mirror 
+                    ball into the camera, we also see a small patch of light on the side of the wall
+                    The latest effect is a small patch of light on the side of the wall, caused by the light bouncing into the glass ball -> out the ball -> off the mirror -> into the ball -> out the ball into the camera
+                </figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/15.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 5: At this point, no new noticeable effects have shown up</figcaption>
+                    </figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/16.png" align="middle" width="400px"/>
+                <figcaption>max ray depth = 100: At this point, no new noticeable effects have shown up</figcaption>
+              </td>
+          </table>
+        </div>
+        <br>
+
+
+
+
+        <h3 align="middle">Part 4. Depth of Field</h3>
+        <b>
+            For these subparts, we recommend using a microfacet BSDF scene to show off the cool out of focus effects you can get with depth of field!
+        </b>
+        <p><b>
+            In a few sentences, explain the differences between a pinhole camera model and a thin-lens camera model. 
+        </b></p>
+        <p>
+            In the pinhole camera model, all light is travels through a single point on the lens plane, meaning that light can be directly sampled with a ray that
+            is directed from the environment to the image sensor. This allows everything to be in focus no matter the distance. However, in the thin-lens model, we can now sample in a specific disk on the lens plane, 
+            so only objects in the focal plane will be focused in the camera's view. This is because the only light that can reach the sensor must pass through the lens and get refracted and due
+            to the physics of refraction, this limits the focused environment to just a plane in the z-axis (depth). This models environments more realistically, because real world cameras and the human eye can only focus on
+            objects in a certain range of distances at a given times, which is what causes the depth of field effect.
+
+        </p>
+        <br>
+        <p><b>
+            Show a "focus stack" where you focus at 4 visibly different depths through a scene. Make sure to include all screenshots.
+        </b></p>
+        <div align="middle">
+          <table style="width:100%">
+            <!-- Header -->
+            <tr align="center">
+              <td>
+                <img src="images/40.png" align="middle" width="400px"/>
+                <figcaption>Focal Distance = 0.5</figcaption>
+              </td>
+              <td>
+                <img src="images/41.png" align="middle" width="400px"/>
+                <figcaption>Focal Distance = 2.5</figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/42.png" align="middle" width="400px"/>
+                <figcaption>Focal distance = 4.5</figcaption>
+              </td>
+              <td>
+                <img src="images/43.png" align="middle" width="400px"/>
+                <figcaption>Focal distance = 10</figcaption>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br>
+        <p><b>
+            Show a sequence of 4 pictures with visibly different aperture sizes, all focused at the same point in a scene. Make sure to include all screenshots.
+        </b></p>
+        <div align="middle">
+          <table style="width:100%">
+            <!-- Header -->
+            <tr align="center">
+              <td>
+                <img src="images/44.png" align="middle" width="400px"/>
+                <figcaption>Aperture = 0</figcaption>
+              </td>
+              <td>
+                <img src="images/45.png" align="middle" width="400px"/>
+                <figcaption>Aperture = 0.1</figcaption>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <img src="images/46.png" align="middle" width="400px"/>
+                <figcaption>Aperture = 0.3</figcaption>
+              </td>
+              <td>
+                <img src="images/47.png" align="middle" width="400px"/>
+                <figcaption>Aperture = 0.8</figcaption>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br>
+
+    </div>
+</body>
 </html>
+
