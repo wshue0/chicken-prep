@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>  
+    body {
+      background-color: gainsboro;
+      color: black;
+    }
+    div.padded {  
+      padding-top: 0px;  
+      padding-right: 200px;  
+      padding-bottom: 0.25in;  
+      padding-left: 200px;  
+    }  
+    p {
+      font-size: medium;
+    }
+    th {
+      align-items: flex-start;
+    }
+    dl {
+      display: table;
+      margin: 0 auto;
+    }
+  </style> 
+<title>Your Name  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">CS 184 Final Project: Cloud to Mesh</h1>
+    <h2 > 
+      We will be implementing two of the suggested project ideas: Point Cloud to Mesh and Remeshing/Mesh Regularization. We will be combining both into a single pipeline where we will ultimately have a program that converts an input point cloud into a regularized mesh. We plan on potentially adding more features too (i.e. point cloud from images we capture).
+    </h2>
+    <h2 align="middle">William Louis, Tiger Ma, Amrita Rajan, William Shue</h2>
+    <br />
+
+    <div class="padded">
+        <h2 align="middle">Problem Description</h3>
+        <p>
+          There are two main problems we are trying to solve. First, we want to take a point cloud and convert it into an accurate, well formed mesh. While point clouds are useful in storing the points of various locations of an image, a mesh is more informative and models the image more in real-life. Meshes are useful when performing more robust analysis and modeling. The second problem we are trying to solve is enhancing the quality of the mesh. More naive techniques for regularizing a mesh may result in irregularity of the polygons and oversmoothing. We want to ensure that the meshes we create can be utilized properly for analysis, processing, etc. These problems are challenging because when creating the mesh from the point cloud input, we want to be able to choose points in such a way that we form a convex shape. If we think about the raw data (i.e. group of 3D coordinates in space), we are basically trying to create a convex hull first. We want to ensure that our algorithm connects edges intentionally. The output of the first part of our project needs to be in such a format that it is valid to regularize. We will solve it by closely following the Ball Point Algorithm outlined in the resource link. 
+        </p>
+
+        <h2 align="middle">Goals and Deliverables</h3>
+        <h3 align="center">What we plan to deliver</h3>
+        <p>
+          An algorithm largely based on the aforementioned paper that will be able to convert an input dataset of points into a well-formed mesh data structure. Next, the second stage of the algorithm will regularize the mesh in hopes of smoothing out the mesh to make it more practical and realistic. We want to develop this algorithm such that it works for any point cloud dataset. We will determine the quality of the algorithm by judging how realistic and well formed the meshes look in the end. If the renderings are realistic, then our algorithm can be judged as “accurate”. 
+          As a preliminary plan, I think we can break up the project into several components. First we will need to parse the data as a file of 3D coordinates into CGL Vector3D representations, since we are planning on using that library due to our familiarity with it. Next, we will follow the “Ball Pivoting Algorithm” in which we pivot a ball around a boundary edge until we hit a new point. At this point, we can define a new triangle and add it to the mesh using the “join and glue” operations described in the paper. Lastly, we can conduct multiple passes to ensure even smoothing. We could even possibly start integrating this with the regularization techniques at this point. For this stage, we can measure the performance of this stage by performing checks to see that the mesh formed is convex and is as continuous as possible. For datasets that were generated from an existing well-formed mesh, we will run comparisons between the final mesh we generate and the reference mesh from which the points were taken from.
+          For the second stage, we plan on implementing isotropic remeshing as described in the slides linked in our resources. This includes steps for incremental remeshing in order to bring the valence of interior/exterior vertices as close as possible to optimal. We can measure the performance of this stage experimentally by calculating the improvement in optimal valence number.
+
+        </p>
+        <h3 align="center">What we hope to deliver</h3>
+        <p>
+          Everything above, i.e. functioning algorithm as well as a streamlined pipeline with a GUI to choose from a preselected pool of point cloud data and generate the final mesh on-the-fly. Potentially more interactive features as a bonus. Some cool features would be being able to just upload any 2D image and then create a 3D point cloud just based on analysis of the lighting and shading of the scene. Another cool feature would be creating rendering of the meshes in certain stylistic styles (pixel art, realistic texture, cartoon) or in pre-selected scenes.
+
+        </p>
+
+        <h2 align="middle">Schedule</h3>
+        <h3 align="left">4/7</h3>
+        <p> Proposal Due: Finish proposal by reading papers and other projects for inspo (past cs284 cloud project)
+        </p>
+        <h3 align="left">4/11</h3>
+        <p> Finish reading papers and outline the high-level code pipeline for processing point cloud to regularized 
+        </p>
+        <h3 align="left">4/18</h3>
+        <p> Have all of the foundational/boilerplate code done. Have all function signatures defined and some should be implemented by now
+        </p>
+        <h3 align="left">4/25</h3>
+        <p> Milestone Due: Finish Milestone report, give status report, re-evaluate goals etc.
+        </p>
+        <h3 align="left">4/28</h3>
+        <p> Finish minimum working functionality as outlined in the initial deliverables.
+        </p>
+        <h3 align="left">5/4</h3>
+        <p> Final Deadline: Polish up code, documentation, and add any extra features or user interaction to the project.
+        </p>
+
+        <h2 align="middle">Resources</h3>
+        <h3 align="center">Data & Algorithms</h3>
+         <dl>
+            <dt>Easier paper on point cloud to mesh</dt>
+            <dd>
+              <a href="https://vgc.poly.edu/~csilva/papers/tvcg99.pdf">link text</a>
+            </dd>
+            <dt>More advanced paper on point cloud to mesh</dt>
+            <dd>
+              <a href="http://research.microsoft.com/en-us/um/people/hoppe/poissonrecon.pdf">link text</a>
+            </dd>
+            <dt>Slides on regularizing a mesh</dt>
+            <dd>
+              <a href="http://www.hao-li.com/cs599-ss2015/slides/Lecture09.1.pdf">link text</a>
+            </dd>
+            <dt>Point Cloud Datasets</dt>
+            <dd>
+              <a href="http://graphics.stanford.edu/data/3Dscanrep/">link text</a>
+            </dd>
+         </dl>
+        <h3 align="center">Software & Computing Platform</h3>
+         <dl>
+            <dt>* OpenGL as toolkit with CGL for arithmetic operations </dt>
+            <dt>* Our personal/laptops/computers</dt>
+            <dt>* For computing platforms we may potentially use our hive virtual machines</dt>
+         </dl>
+        <h3 align="center">Hardware</h3>
+         <dl>
+            <dt>Our personal/laptops/computers</dt>
+         </dl>
+    </div>
+</body>
+</html>
+
