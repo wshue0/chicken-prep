@@ -29,7 +29,7 @@
 </head>
 <body>
 <br />
-<h1 align="middle">CS 184 Final Project: Cloud to Mesh</h1>
+<h1 align="middle">CS 184 Final Project: Cloud to Mesh Milestone</h1>
     <h2 > 
       We will be implementing two of the suggested project ideas: Point Cloud to Mesh and Remeshing/Mesh Regularization. We will be combining both into a single pipeline where we will ultimately have a program that converts an input point cloud into a regularized mesh. We plan on potentially adding more features too (i.e. point cloud from images we capture).
     </h2>
@@ -42,38 +42,81 @@
           There are two main problems we are trying to solve. First, we want to take a point cloud and convert it into an accurate, well formed mesh. While point clouds are useful in storing the points of various locations of an image, a mesh is more informative and models the image more in real-life. Meshes are useful when performing more robust analysis and modeling. The second problem we are trying to solve is enhancing the quality of the mesh. More naive techniques for regularizing a mesh may result in irregularity of the polygons and oversmoothing. We want to ensure that the meshes we create can be utilized properly for analysis, processing, etc. These problems are challenging because when creating the mesh from the point cloud input, we want to be able to choose points in such a way that we form a convex shape. If we think about the raw data (i.e. group of 3D coordinates in space), we are basically trying to create a convex hull first. We want to ensure that our algorithm connects edges intentionally. The output of the first part of our project needs to be in such a format that it is valid to regularize. We will solve it by closely following the Ball Point Algorithm outlined in the resource link. 
         </p>
 
-        <h2 align="middle">Goals and Deliverables</h3>
-        <h3 align="center">What we plan to deliver</h3>
+        <h2 align="middle">Accomplishments</h3>
         <p>
-          An algorithm largely based on the aforementioned paper that will be able to convert an input dataset of points into a well-formed mesh data structure. Next, the second stage of the algorithm will regularize the mesh in hopes of smoothing out the mesh to make it more practical and realistic. We want to develop this algorithm such that it works for any point cloud dataset. We will determine the quality of the algorithm by judging how realistic and well formed the meshes look in the end. If the renderings are realistic, then our algorithm can be judged as “accurate”. 
-          As a preliminary plan, I think we can break up the project into several components. First we will need to parse the data as a file of 3D coordinates into CGL Vector3D representations, since we are planning on using that library due to our familiarity with it. Next, we will follow the “Ball Pivoting Algorithm” in which we pivot a ball around a boundary edge until we hit a new point. At this point, we can define a new triangle and add it to the mesh using the “join and glue” operations described in the paper. Lastly, we can conduct multiple passes to ensure even smoothing. We could even possibly start integrating this with the regularization techniques at this point. For this stage, we can measure the performance of this stage by performing checks to see that the mesh formed is convex and is as continuous as possible. For datasets that were generated from an existing well-formed mesh, we will run comparisons between the final mesh we generate and the reference mesh from which the points were taken from.
-          For the second stage, we plan on implementing isotropic remeshing as described in the slides linked in our resources. This includes steps for incremental remeshing in order to bring the valence of interior/exterior vertices as close as possible to optimal. We can measure the performance of this stage experimentally by calculating the improvement in optimal valence number.
+          We have read the resources (articles, slides, etc.) and have gained familiarity with the algorithm “The Ball-Pivoting Algorithm for Surface Reconstruction”. This is the first part of our overall project, where we convert a point cloud to a mesh. We have started the overall boilerplate code.
+	First, we used project 2 as a general framework to get started. The project 2 code was useful because it has the interfaces required to help us render our visualizations. We can model the way we parse and load files after how project 2 code loads .dae and .bez files. Using project 2 code will also allows us to compare the meshes we create with the ones used in the project.
+	We edited three files: main.cpp, student_code.h, and and student_code.cpp. In main.cpp, we added functionality to support taking in .csv files with data points → which is our point cloud representation. Each datapoint is 6 elements long, with three coordinate points and three normal points. Based on existing logic, we create a polygon mesh and add it to the scene nodes to project and visualize.
+	In student_code.h, we created three structs: triplet, vert, and mesh constructor. The triplet stores 3 points of a triangle and the vert represents a cloupoint class, storing the position and normal vector. The mesh constructor is something we designed that will essentially run the BPA (Ball Pivoting Algorithm).
+	In student_code.cpp, we first populated the mesh constructor class. Essentially, we keep track of the minimum and maximum of each axis. We create a grid with cubes of dimension 2p x 2p x 2p and populate it with input points so we can find the neighbors of a point quickly. This is important for our algorithm because we want to create well-connected and formed meshes. We iterate through the vector of input points parsed from the csv file so that we can run the algorithm. 
 
         </p>
-        <h3 align="center">What we hope to deliver</h3>
+        <h2 align="middle">Results</h3>
         <p>
-          Everything above, i.e. functioning algorithm as well as a streamlined pipeline with a GUI to choose from a preselected pool of point cloud data and generate the final mesh on-the-fly. Potentially more interactive features as a bonus. Some cool features would be being able to just upload any 2D image and then create a 3D point cloud just based on analysis of the lighting and shading of the scene. Another cool feature would be creating rendering of the meshes in certain stylistic styles (pixel art, realistic texture, cartoon) or in pre-selected scenes.
-
+          For results, we take in a csv file full of points and generate a dummy triangle through the visualizer code provided. The project 2 boilerplate code already provided a lot of the visualization and rendering code. Once the ball pivoting algorithm is implemented, the more accurate point based results will be here. 
         </p>
 
-        <h2 align="middle">Schedule</h3>
-        <h3 align="left">4/7</h3>
-        <p> Proposal Due: Finish proposal by reading papers and other projects for inspo (past cs284 cloud project)
+    <div align="middle">
+      <table style="width:100%">
+        <tr align="center">
+          <td>
+            <img src="images/01.png" align="middle" width="300vw" />
+          </td>
+        </tr>
+      </table>
+    </div>
+        
+
+
+
+
+        <h2 align="middle">Progress relative to our plan</h3>
+        <p>
+         On pace with our plan, we were able to finish reading papers and planning out our high level code pipeline by 4/11. We figured out how to integrate existing project boilerplate code into our repo. We compiled new class and data structures related diagrams that we would need to use. We also implemented multiple method signatures as well as pipeline within the boilerplate code from 4/18 to 4/25. We overshot the deadline by 7 days, but we were able to make progress on this portion. For the ball pivot algorithm, we wrote out pseudo code but have yet to write out the entire algorithm step by step. 
         </p>
-        <h3 align="left">4/11</h3>
-        <p> Finish reading papers and outline the high-level code pipeline for processing point cloud to regularized 
-        </p>
-        <h3 align="left">4/18</h3>
-        <p> Have all of the foundational/boilerplate code done. Have all function signatures defined and some should be implemented by now
-        </p>
+
+        <h2 align="middle">Updated Schedule</h3>
         <h3 align="left">4/25</h3>
-        <p> Milestone Due: Finish Milestone report, give status report, re-evaluate goals etc.
+        <p>
+          William Shue: Work on logic for find seed triangle
+Everyone: Also work on milestone
+
+        </p>
+        <h3 align="left">4/26</h3>
+        <p> 
+          Amrita: Work on logic for ball-pivot
+        </p>
+        <h3 align="left">4/27</h3>
+        <p> 
+          William Louis: Work on logic for Glue and Union
         </p>
         <h3 align="left">4/28</h3>
-        <p> Finish minimum working functionality as outlined in the initial deliverables.
+        <p> 
+          William Louis: Work on logic for Glue and Union
         </p>
-        <h3 align="left">5/4</h3>
-        <p> Final Deadline: Polish up code, documentation, and add any extra features or user interaction to the project.
+        <h3 align="left">4/29</h3>
+        <p> 
+          William Shue: Wrap up for BPA
+        </p>
+        <h3 align="left">4/30</h3>
+        <p> 
+          Amrita: Work on regularization
+        </p>
+        <h3 align="left">5/01</h3>
+        <p> 
+          William Louis: Work on regularization
+        </p>
+        <h3 align="left">5/02</h3>
+        <p> 
+          Tiger: Testing and fine-tuning
+        </p>
+        <h3 align="left">5/03</h3>
+        <p> 
+          Everyone: Prep for presentation
+        </p>
+        <h3 align="left">5/04</h3>
+        <p> 
+          Everyone: Prep for presentation
         </p>
 
         <h2 align="middle">Resources</h3>
