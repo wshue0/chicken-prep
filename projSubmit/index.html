@@ -34,7 +34,7 @@
       We will be implementing two of the suggested project ideas: Point Cloud to Mesh and Remeshing/Mesh Regularization. We will be combining both into a single pipeline where we will ultimately generate a regularized mesh from input point cloud data.
     </h2>
     <h2 align="middle">William Louis, Tiger Ma, Amrita Rajan, William Shue</h2>
-    <h2 align="middle">Link to our demo video!<a href="https://wshue0.github.io/chicken-prep/proj3-1/index.html">https://wshue0.github.io/chicken-prep/proj3-1/index.html</a></h2>
+    <h2 align="middle">Link to our demo video!<a href="https://drive.google.com/file/d/1r-yOFe9CF0GIUjNeyxEn9qvrTPmNPRu0/view">https://drive.google.com/file/d/1r-yOFe9CF0GIUjNeyxEn9qvrTPmNPRu0/view</a></h2>
     <br />
 
     <div class="padded">
@@ -119,7 +119,8 @@
         </div>
         <h4 align="left">collapseEdge()</h4>
         <p>
-          To create the collapse algorithm, we made the following diagram to help us with pointer manipulation. The picture on left is how the input shape would look and the right is how the mesh would look after collapsing the middle edge.
+          To create the collapse algorithm, we made the following diagram to help us with pointer manipulation. The picture on left is our diagram of how the input shape would look (top) and the bottom is how the mesh would look after collapsing the middle edge.
+          The picture on the right is an example of collapse applied to an edge of the teapot.
         </p>
         <div align="middle">
           <table style="width:100%">
@@ -156,13 +157,13 @@
               <td>
                 <img src="images/07.png" align="middle" width="400px" />
                 <figcaption>
-                  Here, we have applied a shift in teapot.dae.
+                  We drag a vertex from its original position.
                 </figcaption>
               </td>
               <td>
                 <img src="images/08.png" align="middle" width="400px" />
                 <figcaption>
-                  Notice how after dragging the vertex from the original position, after applying the command, it shifts to a central position restricted to the tangent plane.
+                  Here, we have applied a shift in teapot.dae. After applying the command, it shifts to a central position restricted to the tangent plane.
                 </figcaption>
               </td>
             </tr>
